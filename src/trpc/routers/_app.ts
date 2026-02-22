@@ -1,8 +1,10 @@
-import { messagesRouter } from '@/modules/messages/server/procedures';
-import { createTRPCRouter } from '../init';
+import { messagesRouter } from "@/modules/messages/server/procedures";
+import { createTRPCRouter } from "../init";
+import { projectsRouter } from "@/modules/projects/server/procedures";
 
 export const appRouter = createTRPCRouter({
-  messages: messagesRouter
+  projects: projectsRouter,
+  messages: messagesRouter,
 });
 
 // export type definition of API
