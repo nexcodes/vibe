@@ -6,6 +6,7 @@ import {
   createNetwork,
   createTool,
   gemini,
+  openai,
   type Tool,
 } from "@inngest/agent-kit";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils";
@@ -33,12 +34,14 @@ export const runCodeAgent = inngest.createFunction(
       description:
         "An agent that can write code and run it in a sandbox environment",
       system: PROMPT,
-      model: gemini({
+      model: openai({
         model: config.codeAgent.model,
+        baseUrl: "https://openrouter.ai/api/v1",
+        apiKey: process.env.OPENROUTER_API_KEY,
         defaultParameters: {
-          generationConfig: {
-            temperature: 0.1,
-          },
+          temperature: config.codeAgent.parameters.temperature,
+          max_completion_tokens:
+            config.codeAgent.parameters.max_completion_tokens,
         },
       }),
       tools: [
