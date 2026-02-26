@@ -181,6 +181,9 @@ export const runCodeAgent = inngest.createFunction(
     const isError =
       !result.state.data.summary ||
       Object.keys(result.state.data.files || {}).length === 0;
+    const errorReason = !result.state.data.summary
+      ? "No summary generated"
+      : "No files generated";
 
     const sandboxUrl = await step.run("get-sandbox-url", async () => {
       const sandbox = await getSandbox(sandboxId);
@@ -194,7 +197,7 @@ export const runCodeAgent = inngest.createFunction(
         return await db.message.create({
           data: {
             projectId: event.data.projectId,
-            content: "Something went wrong. Please Try again.",
+            content: `Something went wrong. Please Try again.`,
             role: "ASSISTANT",
             type: "ERROR",
           },
