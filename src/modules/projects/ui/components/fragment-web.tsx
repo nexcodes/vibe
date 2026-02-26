@@ -24,8 +24,8 @@ const FragmentWeb = ({ data }: Props) => {
   };
 
   return (
-    <div className="flex items-center w-full h-full">
-      <div className="p-2 border-b bg-sidebar flex items-center gap-x-2">
+    <div className="flex flex-col items-center w-full h-full">
+      <div className="p-2 border-b bg-sidebar flex items-center gap-x-2 w-full">
         <Hint text="Refresh" side="bottom" align="start">
           <Button size="sm" variant="outline" onClick={onRefresh}>
             <RefreshCcwIcon />
