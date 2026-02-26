@@ -197,7 +197,7 @@ export const runCodeAgent = inngest.createFunction(
         return await db.message.create({
           data: {
             projectId: event.data.projectId,
-            content: `Something went wrong. Please Try again. Reason: ${errorReason}`,
+            content: `Something went wrong. Please Try again.`,
             role: "ASSISTANT",
             type: "ERROR",
           },
