@@ -1,22 +1,20 @@
 "use client";
 
+import FileExplorer from "@/components/file-explorer";
+import { Button } from "@/components/ui/button";
 import {
-  ResizablePanelGroup,
   ResizableHandle,
   ResizablePanel,
+  ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import MessagesContainer from "../components/messages-container";
-import { Suspense, useState } from "react";
-import { Fragment } from "@/generated/prisma";
-import ProjectHeader from "../components/project-header";
-import FragmentWeb from "../components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Fragment } from "@/generated/prisma";
 import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CodeView from "../components/code-view";
+import { Suspense, useState } from "react";
+import FragmentWeb from "../components/fragment-web";
+import MessagesContainer from "../components/messages-container";
+import ProjectHeader from "../components/project-header";
 
 interface Props {
   projectId: string;
@@ -73,8 +71,12 @@ export const ProjectView = ({ projectId }: Props) => {
             <TabsContent value="preview">
               {!!activeFragment && <FragmentWeb data={activeFragment} />}
             </TabsContent>
-            <TabsContent value="code">
-              <CodeView lang="ts" code="const a = 'Hello World'" />
+            <TabsContent value="code" className="min-h-0">
+              {!!activeFragment?.files && (
+                <FileExplorer
+                  files={activeFragment.files as { [path: string]: string }}
+                />
+              )}
             </TabsContent>
           </Tabs>
         </ResizablePanel>
