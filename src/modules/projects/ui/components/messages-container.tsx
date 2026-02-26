@@ -19,6 +19,7 @@ const MessagesContainer = ({
 }: Props) => {
   const trpc = useTRPC();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastAssistantMessageRef = useRef<string>(null);
 
   const { data: messages } = useSuspenseQuery(
     trpc.messages.getMany.queryOptions(
@@ -27,21 +28,23 @@ const MessagesContainer = ({
     ),
   );
 
-  // TODO: TEMPORARY AUTO-ACTIVE FRAGMENT ON NEW ASSISTANT MESSAGE DISABLED
+  useEffect(() => {
+    const lastAssistantMessage = messages.findLast(
+      (msg) => msg.role === "ASSISTANT" && !!msg.fragment,
+    );
 
-  // useEffect(() => {
-  //   const lastAssistantMessage = messages.findLast(
-  //     (msg) => msg.role === "ASSISTANT" && !!msg.fragment,
-  //   );
+    if (
+      lastAssistantMessage?.fragment &&
+      lastAssistantMessage.id !== lastAssistantMessageRef.current
+    ) {
+      setActiveFragment(lastAssistantMessage.fragment);
+      lastAssistantMessageRef.current = lastAssistantMessage.id;
+    }
+  }, [messages, setActiveFragment]);
 
-  //   if (lastAssistantMessage) {
-  //     setActiveFragment(lastAssistantMessage.fragment);
-  //   }
-  // }, [messages, setActiveFragment]);
-
-  // useEffect(() => {
-  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages.length]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
 
   const lastMessage = messages[messages.length - 1];
   const isLastMessageUser = lastMessage?.role === "USER";
