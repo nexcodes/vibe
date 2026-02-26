@@ -17,7 +17,7 @@ export function cn(...inputs: ClassValue[]) {
  * Output: [["src", "Button.tsx"], "README.md"]
  */
 export function convertFilesToTreeItems(
-  files: Record<string, string>
+  files: Record<string, string>,
 ): TreeItem[] {
   // Define proper type for tree structure
   interface TreeNode {
@@ -78,4 +78,9 @@ export function convertFilesToTreeItems(
 
   const result = convertNode(tree);
   return Array.isArray(result) ? result : [result];
+}
+
+export function getLanguageFromExtension(filename: string): string {
+  const extension = filename.split(".").pop()?.toLowerCase();
+  return extension || "text";
 }
