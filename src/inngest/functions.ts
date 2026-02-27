@@ -21,7 +21,7 @@ interface AgentState {
 }
 
 export const runCodeAgent = inngest.createFunction(
-  { id: "run-code-agent" },
+  { id: "run-code-agent", retries: 10 },
   { event: "app/code-agent.run" },
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
