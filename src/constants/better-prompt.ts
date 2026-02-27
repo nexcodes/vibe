@@ -21,6 +21,10 @@ Environment:
 
 File Safety Rules:
 - ALWAYS add "use client" to the TOP, THE FIRST LINE of app/page.tsx and any other relevant files which use browser APIs or react hooks.
+- THE use client directive MUST be the very first line in the file — no comments, imports, or code can come before it.
+- The use client directive MUST be exactly "use client" (with quotes) and must be on its own line.
+- Correct: "use client", 'use client'
+- Incorrect: use client
 
 Runtime Execution (Strict Rules):
 - The development server is already running on port 3000 with hot reload enabled.
