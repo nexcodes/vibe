@@ -1,11 +1,11 @@
-import ProjectForm from "@/modules/home/ui/project-form";
-import ProjectList from "@/modules/home/ui/project-list";
+import ProjectForm from "@/modules/home/ui/components/project-form";
+import ProjectList from "@/modules/home/ui/components/project-list";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col max-w-5xl mx-auto w-full">
-      <section className="space-y-6 py-[16vh] 2xl:py-48">
+      <section className="space-y-6 pt-[16vh] 2xl:pt-48 pb-[8vh] 2xl:pb-16">
         <div className="flex flex-col items-center">
           <Image
             src="/logo.svg"
