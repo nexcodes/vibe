@@ -5,6 +5,7 @@ import { protectedProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import { generateSlug } from "random-word-slugs";
 import z from "zod";
+import { Sandbox } from "@e2b/code-interpreter";
 
 export const projectsRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -93,5 +94,41 @@ export const projectsRouter = createTRPCRouter({
       });
 
       return createdProject;
+    }),
+  resumeSandbox: protectedProcedure
+    .input(
+      z.object({
+        fragmentId: z.string().min(1, { message: "Fragment ID is required" }),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const fragment = await db.fragment.findFirst({
+        where: {
+          id: input.fragmentId,
+          message: {
+            project: {
+              userId: ctx.auth.userId,
+            },
+          },
+        },
+      });
+
+      if (!fragment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Fragment not found",
+        });
+      }
+
+      try {
+        // Sandbox.connect automatically resumes a paused sandbox
+        await Sandbox.connect(fragment.sandboxId, {
+          timeoutMs: 1 * 60 * 1000, // 1 minute
+        });
+      } catch {
+        // Sandbox may no longer exist — ignore the error
+      }
+
+      return { success: true };
     }),
 });

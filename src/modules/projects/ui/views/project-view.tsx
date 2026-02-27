@@ -17,6 +17,8 @@ import MessagesContainer from "../components/messages-container";
 import ProjectHeader from "../components/project-header";
 import { UserControl } from "@/components/user-control";
 import { useAuth } from "@clerk/nextjs";
+import { useTRPC } from "@/trpc/client";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
   projectId: string;
@@ -25,9 +27,21 @@ interface Props {
 export const ProjectView = ({ projectId }: Props) => {
   const { has } = useAuth();
   const hasPremiumAccess = has?.({ plan: "pro" });
+  const trpc = useTRPC();
 
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
   const [tabState, setTabState] = useState<"preview" | "code">("preview");
+
+  const { mutate: resumeSandbox } = useMutation(
+    trpc.projects.resumeSandbox.mutationOptions(),
+  );
+
+  const handleSetActiveFragment = (fragment: Fragment | null) => {
+    setActiveFragment(fragment);
+    if (fragment) {
+      resumeSandbox({ fragmentId: fragment.id });
+    }
+  };
 
   return (
     <div className="h-screen">
@@ -44,7 +58,7 @@ export const ProjectView = ({ projectId }: Props) => {
             <MessagesContainer
               projectId={projectId}
               activeFragment={activeFragment}
-              setActiveFragment={setActiveFragment}
+              setActiveFragment={handleSetActiveFragment}
             />
           </Suspense>
         </ResizablePanel>

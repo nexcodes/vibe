@@ -36,6 +36,7 @@ model Message {
 
 model Fragment {
   id         String @id @default(uuid())
+  sandboxId  String
   sandboxUrl String
   title      String
   files      Json
