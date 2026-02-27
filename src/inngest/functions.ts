@@ -35,7 +35,10 @@ export const runCodeAgent = inngest.createFunction(
   { event: "app/code-agent.run" },
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
-      const sandbox = await Sandbox.create("vibe");
+      const sandbox = await Sandbox.betaCreate("vibe", {
+        autoPause: true,
+        timeoutMs: 2 * 60 * 1000, // 2 minutes
+      });
       return sandbox.sandboxId;
     });
 
@@ -45,6 +48,15 @@ export const runCodeAgent = inngest.createFunction(
       const messages = await db.message.findMany({
         where: {
           projectId: event.data.projectId,
+          NOT: {
+            id: (
+              await db.message.findFirst({
+                where: { projectId: event.data.projectId },
+                orderBy: { createdAt: "desc" },
+                select: { id: true },
+              })
+            )?.id,
+          },
         },
         orderBy: {
           createdAt: "asc",
@@ -82,8 +94,6 @@ export const runCodeAgent = inngest.createFunction(
         apiKey: process.env.OPENROUTER_API_KEY,
         defaultParameters: {
           temperature: config.codeAgent.parameters.temperature,
-          max_completion_tokens:
-            config.codeAgent.parameters.max_completion_tokens,
         },
       }),
       tools: [
@@ -284,6 +294,7 @@ export const runCodeAgent = inngest.createFunction(
           type: "RESULT",
           fragment: {
             create: {
+              sandboxId,
               sandboxUrl,
               title: parseAgentOutput(fragmentTitleOutput, "Fragment"),
               files: result.state.data.files,

@@ -13,6 +13,8 @@ type TextModels =
   | "openai/gpt-oss-20b:free"
   | "nvidia/nemotron-3-nano-30b-a3b:free";
 
+type Provider = "google-ai-studio";
+
 interface Config {
   codeAgent: {
     model: Models;
@@ -21,14 +23,13 @@ interface Config {
     maxIter: number;
     parameters: {
       temperature?: number;
-      max_completion_tokens?: number | undefined;
     };
   };
 }
 
 export const config: Config = {
   codeAgent: {
-    model: "stepfun/step-3.5-flash:free",
+    model: "openai/gpt-oss-120b:free",
     fragmentTitleModel: "nvidia/nemotron-3-nano-30b-a3b:free",
     responseModel: "nvidia/nemotron-3-nano-30b-a3b:free",
     maxIter: 30,
