@@ -45,40 +45,57 @@ export const ProjectView = ({ projectId }: Props) => {
         </ResizablePanel>
         <ResizableHandle className="hover:bg-primary transition-colors" />
         <ResizablePanel defaultSize={65} minSize={50}>
-          <Tabs
-            className="h-full gap-y-0"
-            defaultValue="preview"
-            value={tabState}
-            onValueChange={(value) => setTabState(value as "preview" | "code")}
-          >
-            <div className="w-full flex items-center p-2 border-b gap-x-2">
-              <TabsList className="h-8 p-0 border rounded-md">
-                <TabsTrigger value="preview" className="rounded-md">
-                  <EyeIcon /> <span>Demo</span>
-                </TabsTrigger>
-                <TabsTrigger value="code" className="rounded-md">
-                  <CodeIcon /> <span>Code</span>
-                </TabsTrigger>
-              </TabsList>
-              <div className="ml-auto flex items-center gap-x-2">
-                <Button asChild size="sm" variant="default">
-                  <Link href="/pricing">
-                    <CrownIcon /> Upgrade
-                  </Link>
-                </Button>
+          {!!activeFragment ? (
+            <Tabs
+              className="h-full gap-y-0"
+              defaultValue="preview"
+              value={tabState}
+              onValueChange={(value) =>
+                setTabState(value as "preview" | "code")
+              }
+            >
+              <div className="w-full flex items-center p-2 border-b gap-x-2">
+                <TabsList className="h-8 p-0 border rounded-md">
+                  <TabsTrigger value="preview" className="rounded-md">
+                    <EyeIcon /> <span>Demo</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="code" className="rounded-md">
+                    <CodeIcon /> <span>Code</span>
+                  </TabsTrigger>
+                </TabsList>
+                <div className="ml-auto flex items-center gap-x-2">
+                  <Button asChild size="sm" variant="tertiary">
+                    <Link href="/pricing">
+                      <CrownIcon /> Upgrade
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+              <TabsContent value="preview">
+                <FragmentWeb data={activeFragment} />
+              </TabsContent>
+              <TabsContent value="code" className="min-h-0">
+                {!!activeFragment?.files && (
+                  <FileExplorer
+                    files={activeFragment.files as { [path: string]: string }}
+                  />
+                )}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-8">
+              <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted">
+                <CodeIcon className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <div className="space-y-1.5 max-w-xs">
+                <h3 className="font-semibold text-lg">No fragment selected</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Send a message to generate code, then select a fragment from
+                  the conversation to preview it here.
+                </p>
               </div>
             </div>
-            <TabsContent value="preview">
-              {!!activeFragment && <FragmentWeb data={activeFragment} />}
-            </TabsContent>
-            <TabsContent value="code" className="min-h-0">
-              {!!activeFragment?.files && (
-                <FileExplorer
-                  files={activeFragment.files as { [path: string]: string }}
-                />
-              )}
-            </TabsContent>
-          </Tabs>
+          )}
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
