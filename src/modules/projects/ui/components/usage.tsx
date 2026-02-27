@@ -3,7 +3,7 @@ import { useAuth } from "@clerk/nextjs";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { CrownIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface Props {
   points: number;
@@ -14,6 +14,20 @@ const Usage = ({ points, msBeforeNext }: Props) => {
   const { has } = useAuth();
   const hasPremiumAccess = has?.({ plan: "pro" });
 
+  const resetTime = useMemo(() => {
+    try {
+      return formatDuration(
+        intervalToDuration({
+          start: new Date(),
+          end: new Date(Date.now() + msBeforeNext),
+        }),
+        { format: ["months", "days", "hours"] },
+      );
+    } catch (error) {
+      return "N/A";
+    }
+  }, [msBeforeNext]);
+
   return (
     <div className="rounded-t-xl bg-background border border-b-0 p-2.5">
       <div className="flex items-center gap-x-2">
@@ -21,16 +35,7 @@ const Usage = ({ points, msBeforeNext }: Props) => {
           <p className="text-sm">
             {points} {!hasPremiumAccess && "free"} credits remaining
           </p>
-          <p className="text-xs text-muted-foreground">
-            Resets in{" "}
-            {formatDuration(
-              intervalToDuration({
-                start: new Date(),
-                end: new Date(Date.now() + msBeforeNext),
-              }),
-              { format: ["months", "days", "hours"] },
-            )}
-          </p>
+          <p className="text-xs text-muted-foreground">Resets in {resetTime}</p>
         </div>
         {!hasPremiumAccess && (
           <Button asChild size="sm" variant="tertiary" className="ml-auto">
