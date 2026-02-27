@@ -1,9 +1,10 @@
 type Models =
   | "stepfun/step-3.5-flash:free" // best overall
-  | "google/gemini-3-flash-preview" // max_tokens problem, works well
   | "arcee-ai/trinity-large-preview:free" // works, but not as good as step-3.5-flash
-  | "google/gemini-2.5-flash"
-  | "qwen/qwen3-coder:free"; // maxIter 15, it's slow
+  | "qwen/qwen3-coder:free" // it's slow, uptime very low
+  | "openai/gpt-oss-120b:free" // uptime decent
+  | "meta-llama/llama-3.3-70b-instruct:free"
+  | "nvidia/nemotron-3-nano-30b-a3b:free"
 
 interface Config {
   codeAgent: {
@@ -19,7 +20,7 @@ interface Config {
 export const config: Config = {
   codeAgent: {
     model: "stepfun/step-3.5-flash:free",
-    maxIter: 15,
+    maxIter: 30,
     parameters: {
       temperature: 0.1,
     },
