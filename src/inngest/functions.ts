@@ -1,29 +1,28 @@
-import { inngest } from "./client";
 import { Sandbox } from "@e2b/code-interpreter";
+import { inngest } from "./client";
 
+import {
+  FRAGMENT_TITLE_PROMPT,
+  RESPONSE_PROMPT,
+} from "@/constants/additional-prompt";
+import { PROMPT } from "@/constants/better-prompt";
+import { config } from "@/constants/config";
+import { db } from "@/lib/db";
 import {
   createAgent,
   createNetwork,
   createState,
   createTool,
-  gemini,
   Message,
   openai,
-  type Tool,
+  type Tool
 } from "@inngest/agent-kit";
+import z from "zod";
 import {
   getSandbox,
   lastAssistantTextMessageContent,
   parseAgentOutput,
 } from "./utils";
-import z from "zod";
-import { PROMPT } from "@/constants/better-prompt";
-import {
-  FRAGMENT_TITLE_PROMPT,
-  RESPONSE_PROMPT,
-} from "@/constants/additional-prompt";
-import { config } from "@/constants/config";
-import { db } from "@/lib/db";
 
 interface AgentState {
   summary: string;
@@ -120,7 +119,7 @@ export const runCodeAgent = inngest.createFunction(
 
                 return result.stdout;
               } catch (error) {
-                let errorMessage = `Command execution failed: ${error}  \n stdout: ${buffers.stdout} \n stderr: ${buffers.stderr}`;
+                const errorMessage = `Command execution failed: ${error}  \n stdout: ${buffers.stdout} \n stderr: ${buffers.stderr}`;
                 console.error(errorMessage);
                 return errorMessage;
               }

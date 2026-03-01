@@ -8,7 +8,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Fragment } from "@/generated/prisma";
+import { Fragment } from "@prisma/client";
 import { ErrorFallback } from "@/components/error-fallback";
 import { MessagesSkeleton } from "@/components/messages-skeleton";
 import { ProjectHeaderSkeleton } from "@/components/project-header-skeleton";

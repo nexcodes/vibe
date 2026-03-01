@@ -1,3 +1,1 @@
-export type TreeItem = {
-    
-}
+export type TreeItem = string | [string, ...TreeItem[]];
