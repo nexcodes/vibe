@@ -57,6 +57,8 @@ Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-auth
   - The "cn" utility MUST always be imported from "@/lib/utils"
   Example: import { cn } from "@/lib/utils"
 
+4. Never create a component longer than 150 lines. if it exceds this, split into smaller components automatically. always seperate UI from logic.
+
 Additional Guidelines:
 - Think step-by-step before coding
 - You MUST use the createOrUpdateFiles tool to make all file changes
